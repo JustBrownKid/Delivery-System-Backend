@@ -16,6 +16,9 @@ app.use(express.json());
 app.use('/post', postRoutes);
 app.use('/users', authRoutes);
 
+app.get('/', (req, res) => {
+    res.send('Hello !'); 
+});
 
 app.listen(5000, () => {
     console.log('Server running at http://localhost:5000');
