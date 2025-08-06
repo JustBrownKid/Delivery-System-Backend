@@ -1,5 +1,4 @@
 import express from 'express';
-import postRoutes from './modules/post/routes/post.route';
 import authRoutes from './modules/Auth/routes/auth.routes';
 import dotenv from 'dotenv';
 import cors from "cors"
@@ -13,7 +12,6 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use('/post', postRoutes);
 app.use('/users', authRoutes);
 
 app.get('/', (req, res) => {

@@ -3,7 +3,7 @@ import { IUserRepository } from "../repositories/auth.repository";
 import * as bcrypt from 'bcryptjs'
 import { generateToken } from "../../../common/utils/security/jwtUtils";
 import { generateOtp } from "../../../common/utils/security/generateOtpCode";
-import { hashPassword, comparePassword } from  '../../../common/utils/security/passwordUtils'
+import { hashPassword, comparePassword } from '../../../common/utils/security/passwordUtils'
 import { Otp } from "@prisma/client";
 import { sendEmail } from "../../../common/utils/services/email.services";
 
