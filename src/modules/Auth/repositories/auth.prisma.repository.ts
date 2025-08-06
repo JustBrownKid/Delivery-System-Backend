@@ -1,5 +1,4 @@
 import { prisma } from '../../../common/database/prismaClient'
-import { Post } from '../../post/entities/post.entity';
 import { generateToken } from "../../../common/utils/security/jwtUtils";
 import { IUserRepository } from './auth.repository';
 import { User ,CreateUserData ,UpdateUserData  ,UserWithToken} from '../entities/auth.entity'
@@ -31,7 +30,6 @@ export class PrismaAuthRepository  implements IUserRepository {
                 email: email,
                 otpCode: otpCode,
                 expiresAt: expiresAt,
-                use: false, 
             },
         });
     }
