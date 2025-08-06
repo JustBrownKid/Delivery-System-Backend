@@ -1,4 +1,5 @@
-import * as bcrypt from 'bcryptjs'
+import bcrypt from "bcryptjs/umd/types";
+
 
 const SALT_ROUNDS = 10; 
 export async function hashPassword(password: string): Promise<string> {
