@@ -12,6 +12,7 @@ model User {
   name     String
   password String
   email    String @unique
+  userType String @default("user")
 }
 
 model Otp {
@@ -20,4 +21,42 @@ model Otp {
   createdAt DateTime @default(now())
   expiresAt DateTime
   email     String
+}
+
+model Shipper {
+  id        Int    @id @default(autoincrement())
+  name      String
+  phone     String
+  email     String @unique
+  shipperId String @unique
+  cityId    Int?
+  City      City?  @relation(fields: [cityId], references: [id])
+}
+
+model Order {
+  id         Int    @id @default(autoincrement())
+  cusName    String
+  cusPhone   String
+  cusAddress String
+  cod        Float
+  note       String
+  cityId     Int?
+  City       City?  @relation(fields: [cityId], references: [id])
+}
+
+model State {
+  id     Int    @id @default(autoincrement())
+  name   String @unique
+  cities City[]
+}
+
+model City {
+  id      Int       @id @default(autoincrement())
+  name    String
+  stateId Int
+  status  Boolean
+  Code    String
+  state   State     @relation(fields: [stateId], references: [id])
+  Order   Order[]
+  Shipper Shipper[]
 }

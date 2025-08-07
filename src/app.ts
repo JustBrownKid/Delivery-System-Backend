@@ -1,5 +1,6 @@
 import express from 'express';
 import authRoutes from './modules/Auth/routes/auth.routes';
+import shipperRoutes from './modules/Shipper/routes/shipper.routes'
 import dotenv from 'dotenv';
 import cors from "cors"
 dotenv.config();
@@ -13,6 +14,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use('/users', authRoutes);
+app.use('/shipper', shipperRoutes);
 
 app.get('/', (req, res) => {
     res.send('Hello !'); 
