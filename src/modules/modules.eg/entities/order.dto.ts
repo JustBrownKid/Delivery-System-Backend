@@ -26,7 +26,7 @@ export class Shipper implements ShipperResponse {
       email: string;
       phone: string;
       shipperId: string;
-      City: (PrismaCity & { fee: number; state: PrismaState }) | null;
+      City: PrismaCity & { state: PrismaState } | null;
     }
   ) {
     this.id = rawData.id;
@@ -45,7 +45,7 @@ export class Shipper implements ShipperResponse {
       email: string;
       phone: string;
       shipperId: string;
-      City: (PrismaCity & { fee: number; state: PrismaState }) | null;
+      City: PrismaCity & { state: PrismaState } | null;
     }
   ): Shipper {
     return new Shipper(rawData);

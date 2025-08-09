@@ -10,24 +10,29 @@ const ShipperService = new shipperService(new prismaShipperRepository());
 export default  {
   async create(req: Request, res: Response) {
     try {
-      const data = req.body;
+      const data: ShipperCreation = req.body;
       const rawData = await ShipperService.create(data);
+      if (!rawData) {
+            return sendResponse(res, 404, "Shipper not found.", null);
+      }
       const shipper = new Shipper(rawData)
       sendResponse(res , 201  , "Shipper Create Success" , shipper )
     } catch (error) {
-      res.status(500).json('Internal Server Error during shipper creation.' );
+      sendResponse(res, 500, "Internal Server Error", null, (error as Error).message);
     }
   },
 
   async findByShipperId(req: Request, res: Response) {
     try {
-      const { shipperId } = req.params; 
-
-      const rawData  = await ShipperService.findByShipperId(shipperId);
+      const { shipperId } = req.params;
+      const rawData = await ShipperService.findByShipperId(shipperId);
+      if (!rawData) {
+            return sendResponse(res, 404, "Shipper not found.", null);
+      }
       const shipper = new Shipper(rawData)
-      sendResponse(res , 201  , "Shipper Create Success" , shipper)
+      sendResponse(res, 200, "Shipper fetched successfully", shipper);
     } catch (error) {
-      res.status(500).json( 'Internal Server Error while fetching shipper.' );
+      sendResponse(res, 500, "Internal Server Error", null, (error as Error).message);
     }
   },
   
@@ -37,8 +42,8 @@ export default  {
     try {
       const newShippers = await ShipperService.createMultiple(shippersData);
       sendResponse(res, 201, 'Shippers created successfully', newShippers);
-    } catch (e: any) {
-      sendResponse(res, 500, 'Failed to create shippers', null, e.message);
+    } catch (error) {
+      sendResponse(res, 500, 'Failed to create shippers', null, (error as Error).message);
     }
   }
 };

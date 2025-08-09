@@ -18,7 +18,6 @@ export interface City {
   id: number;
   name: string;
   stateId: number;
-  fee: number;
   status: boolean;
   Code: string;
   state: State;

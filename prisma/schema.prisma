@@ -24,24 +24,29 @@ model Otp {
 }
 
 model Shipper {
-  id        Int    @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   name      String
   phone     String
-  email     String @unique
-  shipperId String @unique
-  cityId    Int?
-  City      City?  @relation(fields: [cityId], references: [id])
+  email     String  @unique
+  shipperId String  @unique
+  orders    Order[]
+  cityId    Int
+  City      City    @relation(fields: [cityId], references: [id])
 }
 
 model Order {
-  id         Int    @id @default(autoincrement())
+  id         Int     @id @default(autoincrement())
   cusName    String
   cusPhone   String
   cusAddress String
   cod        Float
+  delivery   Boolean
   note       String
-  cityId     Int?
-  City       City?  @relation(fields: [cityId], references: [id])
+  trackingId String  @unique
+  cityId     Int
+  shipperId  Int
+  Shipper    Shipper @relation(fields: [shipperId], references: [id])
+  City       City    @relation(fields: [cityId], references: [id])
 }
 
 model State {
@@ -55,6 +60,7 @@ model City {
   name    String
   stateId Int
   status  Boolean
+  fee     Float     @default(4500)
   Code    String
   state   State     @relation(fields: [stateId], references: [id])
   Order   Order[]
