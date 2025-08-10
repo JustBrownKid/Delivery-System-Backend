@@ -22,8 +22,8 @@ export class OrderService {
         return order;
     }
     async searchOrder(params: OrderSearchParams) {
-  return this.orderRepo.searchOrder(params);
-}
+        return this.orderRepo.searchOrder(params);
+    }
     async edit(id: number, data: any): Promise<Order> {
         const order = await this.orderRepo.edit(id, data);
         if (!order) {
@@ -31,12 +31,17 @@ export class OrderService {
         }
         return order;
     }
-    async createMultiple(orderData: OrderCreation[]): Promise<Order[]> {
+    async createMultiple(orderData: OrderCreation[] ,shipperId: number): Promise<Order[]> {
         const createdOrders = [];
         for (const order of orderData) {
-            const newOrder = await this.orderRepo.create(order);
+             const orderWithShipper = {
+            ...order,
+            shipperId: shipperId
+        };
+            const newOrder = await this.orderRepo.create(orderWithShipper);
             createdOrders.push(newOrder);
         }
         return createdOrders;
     }
+
 }

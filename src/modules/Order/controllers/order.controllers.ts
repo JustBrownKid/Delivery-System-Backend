@@ -34,21 +34,31 @@ export default {
             sendResponse(res, 500, "Internal Server Error", null, (error as Error).message);
         }
     },
-async searchOrder(req: Request, res: Response) {
-    try {
-        const params: OrderSearchParams = {
-            shipperId: req.query.shipperId?.toString(),
-            name: req.query.name?.toString(),
-            phone: req.query.phone?.toString(),
-            trackingId: req.query.trackingId?.toString(),
-            startDate: req.query.startDate ? new Date(req.query.startDate.toString()) : undefined,
-            endDate: req.query.endDate ? new Date(req.query.endDate.toString()) : undefined
-        };
+    async searchOrder(req: Request, res: Response) {
+        try {
+            const params: OrderSearchParams = {
+                shipperId: req.query.shipperId?.toString(),
+                name: req.query.name?.toString(),
+                phone: req.query.phone?.toString(),
+                trackingId: req.query.trackingId?.toString(),
+                startDate: req.query.startDate ? new Date(req.query.startDate.toString()) : undefined,
+                endDate: req.query.endDate ? new Date(req.query.endDate.toString()) : undefined
+            };
 
-        const orders = await OrderServiceInstance.searchOrder(params);
-        return res.status(200).json({ success: true, data: orders });
-    } catch (error) {
-        res.status(500).json({ success: false, message: "Internal Server Error", error: (error as Error).message });
+            const orders = await OrderServiceInstance.searchOrder(params);
+            return res.status(200).json({ success: true, data: orders });
+        } catch (error) {
+            res.status(500).json({ success: false, message: "Internal Server Error", error: (error as Error).message });
+        }
+    },
+    async createMultiple(req: Request, res: Response) {
+        const shipperId: number = req.body.shipperId;
+        const orders: OrderCreation[] = req.body.orders;
+        try {
+            const createdOrders = await OrderServiceInstance.createMultiple(orders , shipperId);
+            sendResponse(res, 201, "Orders created successfully", createdOrders);
+        } catch (error) {
+            sendResponse(res, 500, "Internal Server Error", null, (error as Error).message);
+        }
     }
-}
 }

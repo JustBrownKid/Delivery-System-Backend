@@ -7,7 +7,6 @@ import { prismaShipperRepository } from '../../Shipper/repositories/shipper.pris
 
 const ShipperService = new shipperService(new prismaShipperRepository());
 
-
 export class prismaOrderRepository implements IOrderRepository {
 
     async create(data: OrderCreation): Promise<Order> {
