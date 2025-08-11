@@ -11,7 +11,7 @@ export const shipperRegisterSchema = Joi.object({
     'string.empty': 'Email cannot be empty',
     'any.required': 'Email is required',
   }),
-  phone: Joi.string().required().messages({
+  phone: Joi.number().required().messages({
     'string.empty': 'Phone cannot be empty',
     'any.required': 'Phone is required',
   }),

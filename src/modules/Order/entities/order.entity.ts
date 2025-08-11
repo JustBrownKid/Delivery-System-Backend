@@ -22,6 +22,20 @@ export interface Order {
   cityId: number;
   totalCod? : number;
 }
+export interface OrderWithCity {
+  City?: City;
+  id: number;
+  shipperId:number
+  cusName: string;
+  cusPhone: string;
+  cusAddress: string;
+  cod: number;
+  delivery: boolean;
+  trackingId: string;
+  note: string;
+  cityId: number;
+  totalCod? : number;
+}
 export interface OrderUpdate {
   cusName?: string;
   cusPhone?: string;
@@ -47,6 +61,7 @@ export interface City {
   name: string;
   stateId: number;
   status: boolean;
+  fee:number;
   Code: string;
   state: State;
 }

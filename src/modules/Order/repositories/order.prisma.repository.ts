@@ -1,5 +1,5 @@
 import { IOrderRepository } from "./order.repository";
-import { OrderCreation, Order, OrderSearchParams, OrderUpdate } from "../entities/order.entity";
+import { OrderCreation, Order, OrderWithCity,OrderSearchParams, OrderUpdate } from "../entities/order.entity";
 import { prisma } from "../../../common/database/prismaClient";
 import { trackingIdGenerator } from "../../../common/utils/services/trackingIdGenerator";
 import { shipperService } from "../../Shipper/services/shipper.services";
@@ -63,7 +63,7 @@ export class prismaOrderRepository implements IOrderRepository {
         return ordersWithTotalCod;
     }
 
-    async ByTracking(tracking: string): Promise<Order | null> {
+    async ByTracking(tracking: string): Promise<OrderWithCity | null> {
         const order = await prisma.order.findUnique({
             where: {
                 trackingId: tracking
@@ -90,7 +90,17 @@ export class prismaOrderRepository implements IOrderRepository {
             return null;
         }
 
-        const totalCod = order.delivery ? (order.cod + (order.City?.fee ?? 0)) : order.cod;
+        let totalCod: number;
+
+        if (order.delivery) {
+            if(order.deliFee){
+                totalCod = order.cod + order.deliFee;
+            }else{
+                totalCod = order.cod + order.City.fee;
+            }
+        } else {
+            totalCod = order.cod;
+        }
         return { ...order, totalCod };
     }
 
@@ -107,7 +117,8 @@ export class prismaOrderRepository implements IOrderRepository {
                 shipperId: {
                     equals: shipperId,
                     mode: 'insensitive'
-                }
+                },
+                
              };
             }
         }
@@ -157,10 +168,12 @@ export class prismaOrderRepository implements IOrderRepository {
 
         return ordersWithTotalCod;
     }
-    async edit(id: number, data: OrderUpdate): Promise<Order> {
+    async edit(id: number, deliFee: number): Promise<Order> {
         const updatedOrder = await prisma.order.update({
             where: { id: id },
-            data: data,
+               data: { 
+        deliFee: deliFee,
+    },
         });
 
         return updatedOrder;

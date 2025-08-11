@@ -7,5 +7,6 @@ router.post("/", orderControllers.create);
 router.post("/uplode", orderControllers.createMultiple);
 router.get("/:trackingId", orderControllers.ByTracking);
 router.get("/s/:shipperId", orderControllers.ByShipperId);
+router.put('/update/:tracking' , orderControllers.editDeliFee )
 
 export default router;

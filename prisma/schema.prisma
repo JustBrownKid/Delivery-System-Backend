@@ -35,18 +35,29 @@ model Shipper {
 }
 
 model Order {
-  id         Int     @id @default(autoincrement())
-  cusName    String
-  cusPhone   String
-  cusAddress String
-  cod        Float
-  delivery   Boolean
-  note       String
-  trackingId String  @unique
-  cityId     Int
-  shipperId  Int
-  Shipper    Shipper @relation(fields: [shipperId], references: [id])
-  City       City    @relation(fields: [cityId], references: [id])
+  id           Int            @id @default(autoincrement())
+  cusName      String
+  cusPhone     String
+  cusAddress   String
+  cod          Float
+  delivery     Boolean
+  note         String
+  trackingId   String         @unique
+  cityId       Int
+  deliFee      Int?
+  shipperId    Int
+  Shipper      Shipper        @relation(fields: [shipperId], references: [id])
+  City         City           @relation(fields: [cityId], references: [id])
+  orderDetails orderDetails[]
+}
+
+model orderDetails {
+  id      Int      @id @default(autoincrement())
+  kg      Int
+  cm      Int?
+  OrderId Int
+  Images  String[]
+  Order   Order    @relation(fields: [OrderId], references: [id])
 }
 
 model State {

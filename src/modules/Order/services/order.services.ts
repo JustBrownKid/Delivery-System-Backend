@@ -1,6 +1,5 @@
 import { IOrderRepository } from "../repositories/order.repository";
-import { OrderCreation, Order, OrderSearchParams } from "../entities/order.entity";
-import { ShipperCreation } from "../../modules.eg/entities/order.entity";
+import { OrderCreation, Order,OrderWithCity, OrderSearchParams } from "../entities/order.entity";
 
 export class OrderService {
     constructor(private orderRepo: IOrderRepository) {}
@@ -14,7 +13,7 @@ export class OrderService {
         }
         return order;
     }   
-    async ByTracking(tracking: string): Promise<Order | null> {
+    async ByTracking(tracking: string): Promise<OrderWithCity | null> {
         const order = await this.orderRepo.ByTracking(tracking);
         if (!order) {
             throw new Error("Order not found.");
@@ -24,8 +23,8 @@ export class OrderService {
     async searchOrder(params: OrderSearchParams) {
         return this.orderRepo.searchOrder(params);
     }
-    async edit(id: number, data: any): Promise<Order> {
-        const order = await this.orderRepo.edit(id, data);
+    async updateDeliFee(id: number, deliFee: number): Promise<Order> {
+        const order = await this.orderRepo.edit(id, deliFee);
         if (!order) {
             throw new Error("Order not found.");
         }
