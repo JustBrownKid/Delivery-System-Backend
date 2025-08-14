@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "orderDetails" ALTER COLUMN "kg" SET DATA TYPE DOUBLE PRECISION;

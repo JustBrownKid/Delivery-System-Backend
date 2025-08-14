@@ -26,13 +26,14 @@ export default {
             if (!order) {
                 throw new Error("Invalid trackingId, Order not found");
             }
-              if (!order || !order.City?.fee) {
+              if (!order || !order.destinationCity?.fee) {
                 throw new Error("Invalid trackingId or City not found");
             }
 
-             let totalDeliFee = order.City?.fee;
+             let totalDeliFee = order.destinationCity?.fee;
              if (data.kg > 10) {
-                const extraKg = data.kg - 10;
+                const roundedKg = Math.floor(data.kg);
+                const extraKg = roundedKg - 10;
                 totalDeliFee += extraKg * 500;
             }
 
@@ -40,7 +41,6 @@ export default {
                 const extraCmInTens = Math.floor((data.cm - 100) / 10);
                 totalDeliFee += extraCmInTens * 1000;
             }
-
             await orderServices.updateDeliFee(order.id, totalDeliFee);
             const oswm = await oswmService.create({
                 cm: data.cm,

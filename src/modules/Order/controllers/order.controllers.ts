@@ -18,6 +18,18 @@ export default {
             sendResponse(res, 500, "Internal Server Error", null, (error as Error).message);
         }
     },
+    async getAll(req: Request, res: Response) {
+        const { page } = req.query;
+        try {
+            const orders = await OrderServiceInstance.getAll(Number(page));
+            if (!orders || orders.length === 0) {
+                return sendResponse(res, 404, "No orders found", null);
+            }
+                sendResponse(res, 200, "Orders retrieved successfully", orders);
+            } catch (error) {
+                sendResponse(res, 500, "Internal Server Error", null, (error as Error).message);
+            }
+    },
     async ByShipperId(req: Request, res: Response) {
         const { shipperId } = req.params;
         try {
@@ -31,8 +43,7 @@ export default {
          const { trackingId } = req.params;
         try {
             const order = await OrderServiceInstance.ByTracking(trackingId);
-            const filteredOrder = OrderFilter(order);
-            sendResponse(res, 200, "Order retrieved successfully", filteredOrder);
+            sendResponse(res, 200, "Order retrieved successfully", order);
         } catch (error) {
             sendResponse(res, 500, "Internal Server Error", null, (error as Error).message);
         }
@@ -54,20 +65,40 @@ export default {
             res.status(500).json({ success: false, message: "Internal Server Error", error: (error as Error).message });
         }
     },
-    async createMultiple(req: Request, res: Response) {
-        const shipperId: number = req.body.shipperId;
-        const orders: OrderCreation[] = req.body.orders;
-        try {
-            const createdOrders = await OrderServiceInstance.createMultiple(orders , shipperId);
-            sendResponse(res, 201, "Orders created successfully", createdOrders);
-        } catch (error) {
-            sendResponse(res, 500, "Internal Server Error", null, (error as Error).message);
-        }
-    },
+ async createMultiple(req: Request, res: Response) {
+    const shipperId: number = req.body.shipperId;
+    const { pickUpAddress, pickUpState, pickUpDate, pickUpCityId,pickUpPhone, pickUpName, orders } = req.body;
+
+    try {
+        const ordersWithPickUpInfo: OrderCreation[] = orders.map((order: any) => ({
+            cusName: order.cusName,
+            cusPhone: order.cusPhone,
+            cusAddress: order.cusAddress,
+            cod: order.cod,
+            delivery: order.delivery,
+            note: order.note,
+            shipperId,
+            pickUpAddress,
+            pickUpState,
+            pickUpDate: new Date(pickUpDate),
+            pickUpPhone,
+            pickUpName,
+            destinationCityId: order.cityId, 
+            pickUpCityId: pickUpCityId,
+        }));
+
+        const createdOrders = await OrderServiceInstance.createMultiple(ordersWithPickUpInfo);
+
+        sendResponse(res, 201, "Orders created successfully", createdOrders);
+    } catch (error) {
+        sendResponse(res, 500, "Internal Server Error", null, (error as Error).message);
+    }
+},
     async editDeliFee(req: Request, res: Response): Promise <any> {
         try {
             const { tracking } = req.params; 
-            const { deliFee } = req.body;
+            const { deliFee , sw} = req.body;
+
             
             if (!tracking || deliFee === undefined || isNaN(deliFee)) {
                 return res.status(400).json({
@@ -85,7 +116,6 @@ export default {
                 });
             }
             const updatedOrder = await OrderServiceInstance.updateDeliFee(Number(order.id), deliFee);
-
             return res.status(200).json({
                 success: true,
                 message: "Delivery fee updated successfully.",
@@ -99,5 +129,31 @@ export default {
                 error: (error as Error).message
             });
         }
+    },
+    async orderUpdate(req: Request, res: Response): Promise <any> {
+        const { trackingId } = req.params;
+        const data = req.body
+         console.log("Tracking ID:", trackingId);
+    console.log("Received data:", data); 
+        try {
+            if (!trackingId) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Tracking ID is required.',
+                });
+            }
+
+            const order = await OrderServiceInstance.ByTracking(trackingId);
+            if (!order) {
+                throw new Error("Invalid trackingId, Order not found");
+            }
+
+            const updatedOrder = await OrderServiceInstance.orderUpdate(order.id, data);
+            return sendResponse(res, 200, 'Order updated successfully', updatedOrder);
+        } catch (error) {
+    console.error("Prisma update error:", error);
+    return sendResponse(res, 500, (error as Error).message);
+}
+
     }
 }

@@ -1,13 +1,22 @@
 
 export interface OrderCreation {
   shipperId:number
+  trackingId?: string;
   cusName: string;
   cusPhone: string;
   cusAddress: string;
   cod: number;
   delivery: boolean;
   note: string;
-  cityId: number;
+  destinationCityId: number;
+  pickUpCityId: number;
+  pickUpAddress: string;
+  pickUpState: string;
+  pickUpDate: Date;
+  pickUpPhone: string;
+  pickUpName: string;
+  destinationCity?: string;
+  pickUpCity?: string;
 }
 export interface Order {
   id: number;
@@ -16,6 +25,11 @@ export interface Order {
   cusPhone: string;
   cusAddress: string;
   cod: number;
+  destinationCity?: City;
+  pickUpCity?: City;
+  pickUpAddress: string;
+  pickUpPhone: string;
+  pickUpName: string;
   delivery: boolean;
   trackingId: string;
   note: string;
@@ -23,7 +37,7 @@ export interface Order {
   totalCod? : number;
 }
 export interface OrderWithCity {
-  City?: City;
+  destinationCity?: City;
   id: number;
   shipperId:number
   cusName: string;

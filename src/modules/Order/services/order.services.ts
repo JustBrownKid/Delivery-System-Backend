@@ -6,6 +6,9 @@ export class OrderService {
     async create(data: OrderCreation): Promise<Order> {
         return this.orderRepo.create(data);
     }
+    async getAll(page: number): Promise<Order[] | null> {
+        return this.orderRepo.getAll(page);
+    }
     async ByShipperId(shipperId: number): Promise<Order[] | null> {
         const order = await this.orderRepo.ByShipperId(shipperId);
         if (!order) {
@@ -24,23 +27,41 @@ export class OrderService {
         return this.orderRepo.searchOrder(params);
     }
     async updateDeliFee(id: number, deliFee: number): Promise<Order> {
-        const order = await this.orderRepo.edit(id, deliFee);
+        const order = await this.orderRepo.deliFeeUpdate(id, deliFee);
         if (!order) {
             throw new Error("Order not found.");
         }
         return order;
     }
-    async createMultiple(orderData: OrderCreation[] ,shipperId: number): Promise<Order[]> {
-        const createdOrders = [];
-        for (const order of orderData) {
-             const orderWithShipper = {
-            ...order,
-            shipperId: shipperId
-        };
-            const newOrder = await this.orderRepo.create(orderWithShipper);
-            createdOrders.push(newOrder);
-        }
-        return createdOrders;
+    async orderUpdate(id: number, data: any): Promise<Order> {
+        return this.orderRepo.orderUpdate(id, data);
     }
+   async createMultiple(orderData: OrderCreation[]): Promise<Order[]> {
+    const createdOrders: Order[] = [];
+
+    for (const order of orderData) {
+        const orderToCreate: OrderCreation = {
+            cusName: order.cusName,
+            cusPhone: order.cusPhone,
+            cusAddress: order.cusAddress,
+            cod: order.cod,
+            delivery: order.delivery,
+            note: order.note,
+            shipperId: order.shipperId,
+            pickUpAddress: order.pickUpAddress,
+            pickUpState: order.pickUpState,
+            pickUpDate: order.pickUpDate,
+            pickUpPhone: order.pickUpPhone,
+            pickUpName: order.pickUpName,
+            destinationCityId: order.destinationCityId,
+            pickUpCityId: order.pickUpCityId,
+        };
+
+        const newOrder = await this.orderRepo.create(orderToCreate);
+        createdOrders.push(newOrder);
+    }
+
+    return createdOrders;
+}
 
 }

@@ -35,25 +35,33 @@ model Shipper {
 }
 
 model Order {
-  id           Int            @id @default(autoincrement())
-  cusName      String
-  cusPhone     String
-  cusAddress   String
-  cod          Float
-  delivery     Boolean
-  note         String
-  trackingId   String         @unique
-  cityId       Int
-  deliFee      Int?
-  shipperId    Int
-  Shipper      Shipper        @relation(fields: [shipperId], references: [id])
-  City         City           @relation(fields: [cityId], references: [id])
-  orderDetails orderDetails[]
+  id              Int            @id @default(autoincrement())
+  cusName         String
+  cusPhone        String
+  cusAddress      String
+  pickUpAddress   String
+  pickUpPhone     String
+  pickUpName      String
+  pickUpDate      DateTime
+  pickUpCityId    Int
+  pickUpCity      City           @relation("OrderToPickupCity", fields: [pickUpCityId], references: [id])
+  cod             Float
+  delivery        Boolean
+  note            String
+  trackingId      String         @unique
+  cityId          Int
+  deliFee         Int?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  shipperId       Int
+  Shipper         Shipper        @relation(fields: [shipperId], references: [id])
+  destinationCity City           @relation("OrderToDestinationCity", fields: [cityId], references: [id])
+  orderDetails    orderDetails[]
 }
 
 model orderDetails {
   id      Int      @id @default(autoincrement())
-  kg      Int
+  kg      Float
   cm      Int?
   OrderId Int
   Images  String[]
@@ -67,13 +75,14 @@ model State {
 }
 
 model City {
-  id      Int       @id @default(autoincrement())
-  name    String
-  stateId Int
-  status  Boolean
-  fee     Float     @default(4500)
-  Code    String
-  state   State     @relation(fields: [stateId], references: [id])
-  Order   Order[]
-  Shipper Shipper[]
+  id                Int       @id @default(autoincrement())
+  name              String
+  stateId           Int
+  status            Boolean
+  fee               Float     @default(4500)
+  Code              String
+  state             State     @relation(fields: [stateId], references: [id])
+  pickupOrders      Order[]   @relation("OrderToPickupCity")
+  destinationOrders Order[]   @relation("OrderToDestinationCity")
+  Shipper           Shipper[]
 }
