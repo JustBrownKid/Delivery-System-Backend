@@ -9,6 +9,18 @@ import { any } from "joi";
 const ShipperService = new shipperService(new prismaShipperRepository());
 
 export class prismaOrderRepository implements IOrderRepository {
+    async state(): Promise<any> {
+        const states = await prisma.state.findMany();
+        return states;
+    }
+
+    async city(): Promise<any> {
+        const cities = await prisma.city.findMany({
+            where: { status: true }
+        });
+        return cities;
+    }
+
     async getAll(page: number): Promise<Order[] | null> {
     const take = 20;
     // const currentPage = Math.max(1, page);
@@ -180,16 +192,26 @@ export class prismaOrderRepository implements IOrderRepository {
     }
 
   async searchOrder(params: OrderSearchParams): Promise<Order[] | null> {
-    const { shipperId, name, phone, startDate, endDate, trackingId } = params;
-    const whereConditions: any = {};
+      const { shipperId, name, phone, startDate, endDate, trackingId ,trackingIds } = params;
+      const whereConditions: any = {};
 
-    if (shipperId) {
-        whereConditions.Shipper = { is: {  shipperId: shipperId } };
-    }
-    if (trackingId) whereConditions.trackingId = trackingId;
-    if (name) whereConditions.cusName = { contains: name, mode: 'insensitive' };
-    if (phone) whereConditions.cusPhone = { contains: phone, mode: 'insensitive' };
-    if (startDate && endDate) whereConditions.createdAt = { gte: startDate, lte: endDate };
+      if (shipperId) {
+          whereConditions.Shipper = { is: { shipperId: shipperId } };
+      }
+      if (trackingIds && trackingIds.length > 0) {
+          whereConditions.trackingId = { in: trackingIds };
+      } else if (trackingId) {
+          whereConditions.trackingId = trackingId.trim();
+      }
+      if (phone) {
+          whereConditions.cusPhone = phone.trim();
+      }
+      if (name) {
+          whereConditions.cusName = { contains: name.trim(), mode: 'insensitive' };
+      }
+      if (startDate && endDate) {
+          whereConditions.createdAt = { gte: startDate, lte: endDate };
+      }
 
     const orders = await prisma.order.findMany({
         where: whereConditions,
@@ -223,9 +245,9 @@ async deliFeeUpdate(id: number, deliFee: number): Promise<Order> {
     }
 
     async orderUpdate(id: number, data: OrderUpdate): Promise<Order> {
-        return await prisma.order.update({
-            where: { id },
-             data: data
+        return prisma.order.update({
+            where: {id},
+            data: data
         });
     }
 }

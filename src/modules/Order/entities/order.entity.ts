@@ -68,6 +68,7 @@ export interface OrderSearchParams {
   startDate?: Date;
   endDate?: Date;
   trackingId?: string;
+  trackingIds?: string[];
 }
 
 export interface City {

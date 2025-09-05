@@ -61,7 +61,55 @@ export default {
             });
         }
     },
-    
+    async createMultiple(req: Request, res: Response): Promise<any> {
+        try {
+            const data = req.body;
+            const itemsForPrisma = []; 
+
+            for (const item of data) {
+                const order = await orderServices.ByTracking(item.trackingId);
+                
+                if (!order || !order.destinationCity?.fee) {
+                    throw new Error(`Invalid trackingId or City not found for item with trackingId: ${item.trackingId}`);
+                }
+
+                let totalDeliFee = order.destinationCity.fee;
+
+                if (item.kg > 10) {
+                    const roundedKg = Math.floor(item.kg);
+                    const extraKg = roundedKg - 10;
+                    totalDeliFee += extraKg * 500;
+                }
+
+                if (item.cm && item.cm > 100) {
+                    const extraCmInTens = Math.floor((item.cm - 100) / 10);
+                    totalDeliFee += extraCmInTens * 1000;
+                }
+
+                await orderServices.updateDeliFee(order.id, totalDeliFee);
+
+                itemsForPrisma.push({
+                    cm: item.cm,
+                    kg: item.kg,
+                    Images: item.Images,
+                    OrderId: order.id,
+                });
+            }
+
+            await oswmService.createMultiple(itemsForPrisma);
+
+            return res.status(201).json({
+                success: true,
+                message: 'Oswm records created successfully',
+            });
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: "Failed to create Oswm records",
+                error: (error as Error).message,
+            });
+        }
+    },
     async getOswm(req: Request, res: Response): Promise <any>{
         try {
             const { trackingId } = req.params;

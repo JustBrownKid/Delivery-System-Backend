@@ -1,7 +1,6 @@
 import { AuthService } from "../services/auth.services";
 import { PrismaAuthRepository } from "../repositories/auth.prisma.repository";
 import { Request, Response, NextFunction } from "express";
-import { verify } from "jsonwebtoken";
 
 
 const newAuthService = new AuthService(new PrismaAuthRepository());

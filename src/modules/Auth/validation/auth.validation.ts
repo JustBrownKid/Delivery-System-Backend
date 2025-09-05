@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 export const registerSchema = Joi.object({
  name: Joi.string().min(6).required().messages({
-    'string.min': 'Nmae must be at least 3 characters long',
+    'string.min': 'Name must be at least 3 characters long',
     'string.empty': 'Name cannot be empty',
     'any.required': 'Name is required',
   }),
@@ -16,7 +16,6 @@ export const registerSchema = Joi.object({
     'string.empty': 'Password cannot be empty',
     'any.required': 'Password is required',
   }),
- 
 });
 
 export const loginSchema = Joi.object({

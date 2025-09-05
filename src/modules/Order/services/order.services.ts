@@ -3,6 +3,13 @@ import { OrderCreation, Order,OrderWithCity, OrderSearchParams } from "../entiti
 
 export class OrderService {
     constructor(private orderRepo: IOrderRepository) {}
+    async city() : Promise<any> {
+        return this.orderRepo.city();
+    }
+    async state() : Promise<any> {
+        return this.orderRepo.state();
+    }
+
     async create(data: OrderCreation): Promise<Order> {
         return this.orderRepo.create(data);
     }
@@ -61,7 +68,7 @@ export class OrderService {
         createdOrders.push(newOrder);
     }
 
-    return createdOrders;
-}
+        return createdOrders;
+    }
 
 }

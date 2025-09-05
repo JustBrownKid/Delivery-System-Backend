@@ -1,0 +1,5 @@
+### GET request to example server
+GET http://localhost:3000/order/DOME82440153780105940000
+
+###
+ GET http://localhost:3000/order/DOME82440153780105940000

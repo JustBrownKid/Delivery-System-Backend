@@ -11,6 +11,11 @@ export class OswmService {
     async create(data:OswmCreation): Promise <void>{
         await this.oswmRepo.create(data);
     }
+
+    async createMultiple(data: OswmCreation[]): Promise<void> {
+        await this.oswmRepo.createMultiple(data);
+    }
+    
     async getOswm(trackingId:number): Promise <Oswm | null >{
         return await this.oswmRepo.getByTrackingId(trackingId)
     }

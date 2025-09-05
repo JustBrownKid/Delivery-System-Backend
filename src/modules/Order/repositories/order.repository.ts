@@ -8,4 +8,6 @@ export interface IOrderRepository {
   create(data: OrderCreation): Promise<Order>;
   deliFeeUpdate(id: number, deliFee: number): Promise<Order>;
   orderUpdate(id: number, data: any): Promise<Order>;
+  city(): Promise<any>;
+  state(): Promise<any>;
 }
