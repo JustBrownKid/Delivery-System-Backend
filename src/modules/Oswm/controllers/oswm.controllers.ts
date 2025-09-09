@@ -109,7 +109,8 @@ export default {
                 error: (error as Error).message,
             });
         }
-    },
+    }
+    ,
     async getOswm(req: Request, res: Response): Promise <any>{
         try {
             const { trackingId } = req.params;
@@ -131,4 +132,6 @@ export default {
             return sendResponse(res, 500, "Failed to get Oswm", (error as Error).message);
         }
     }
+
+
 };

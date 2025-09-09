@@ -1,7 +1,7 @@
-import { IOswmRepository } from "../repositories/oswm.repository";
-import { Oswm , OswmCreation } from "../entities/oswm.entity";
-import { OrderService } from "../../Order/services/order.services";
-import { prismaOrderRepository } from "../../Order/repositories/order.prisma.repository";
+import {IOswmRepository} from "../repositories/oswm.repository";
+import {Oswm, OswmCreation} from "../entities/oswm.entity";
+import {OrderService} from "../../Order/services/order.services";
+import {prismaOrderRepository} from "../../Order/repositories/order.prisma.repository";
 
 const orderServices = new OrderService(new prismaOrderRepository())
 
@@ -19,4 +19,5 @@ export class OswmService {
     async getOswm(trackingId:number): Promise <Oswm | null >{
         return await this.oswmRepo.getByTrackingId(trackingId)
     }
+
 }

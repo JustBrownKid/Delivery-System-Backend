@@ -14,7 +14,6 @@ export class  prismaOswmRepository implements IOswmRepository {
     });
     return oswm;
   }
-
   async create(data: OswmCreation): Promise<void> {
     await prisma.orderDetails.create({
       data: data
@@ -26,4 +25,5 @@ export class  prismaOswmRepository implements IOswmRepository {
       data: data
     })
   }
+
 }

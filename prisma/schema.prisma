@@ -66,6 +66,8 @@ model orderDetails {
   OrderId Int
   Images  String[]
   Order   Order    @relation(fields: [OrderId], references: [id])
+  createdAt DateTime @default(now())
+
 }
 
 model State {
