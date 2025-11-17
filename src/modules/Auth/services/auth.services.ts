@@ -3,12 +3,12 @@ import { IUserRepository } from "../repositories/auth.repository";
 import * as bcrypt from 'bcryptjs'
 import { generateToken } from "../../../common/utils/security/jwtUtils";
 import { generateOtp } from "../../../common/utils/security/generateOtpCode";
-import { hashPassword , comparePassword} from "../../../common/utils/security/password"
+import { hashPassword, comparePassword } from "../../../common/utils/security/password"
 import { Otp } from "@prisma/client";
 import { sendEmail } from "../../../common/utils/services/email.services";
 
 export class AuthService {
-    constructor(private authRepo: IUserRepository) {}
+    constructor(private authRepo: IUserRepository) { }
 
     findById(id: string): Promise<User | null> {
         return this.authRepo.findById(id);
@@ -43,13 +43,13 @@ export class AuthService {
         if (!isPasswordValid) {
             throw new Error('Invalid email or password');
         }
-        
+
         const otp = generateOtp();
-        const expiresAt = new Date(Date.now() + 10 * 60 * 1000); 
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
         await this.authRepo.saveOtp(email, otp, expiresAt);
-         const emailSubject = 'Your Login OTP';
+        const emailSubject = 'Your Login OTP';
         const emailText = `Hello ${user.name},\n\nYour one-time password (OTP) for login is: ${otp}\n\nThis OTP is valid for 10 minutes.\n\nIf you did not request this, please ignore this email.`;
-        
+
         const emailHtml = `
             <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 16px; color: #333; line-height: 1.5; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); background-color: #ffffff;">
     
@@ -67,7 +67,7 @@ export class AuthService {
     </p>
 </div>
         `;
-        
+
         await sendEmail(email, emailSubject, emailText, emailHtml);
 
     }
@@ -90,7 +90,7 @@ export class AuthService {
         if (otpPlain !== storedOtp.otpCode) {
             throw new Error('Invalid OTP');
         }
-        
+
         const user = await this.authRepo.findByEmail(email);
 
         if (!user) {

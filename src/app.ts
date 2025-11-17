@@ -11,9 +11,9 @@ const app = express();
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cors({
-    origin: 'http://localhost:5173',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
-    allowedHeaders: ['Content-Type', 'Authorization'], 
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 app.use(express.json());
@@ -23,7 +23,7 @@ app.use('/order', orderRoutes);
 app.use('/oswm', oswmRoutes);
 
 app.get('/', (req, res) => {
-    res.send('Hello !'); 
+    res.send('Hello !');
 });
 
 const port = process.env.PORT || 3000;
