@@ -60,14 +60,13 @@ model Order {
 }
 
 model orderDetails {
-  id      Int      @id @default(autoincrement())
-  kg      Float
-  cm      Int?
-  OrderId Int
-  Images  String[]
-  Order   Order    @relation(fields: [OrderId], references: [id])
+  id        Int      @id @default(autoincrement())
+  kg        Float
+  cm        Int?
+  OrderId   Int
+  Images    String[]
+  Order     Order    @relation(fields: [OrderId], references: [id])
   createdAt DateTime @default(now())
-
 }
 
 model State {

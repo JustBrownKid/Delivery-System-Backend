@@ -9,8 +9,8 @@ router.get("/shipper/:shipperId", orderControllers.ByShipperId);
 
 router.get("/:trackingId", orderControllers.ByTracking);
 router.get("/", orderControllers.getAll);
-router.get('/city/get' , orderControllers.city)
-router.get("/state/get" , orderControllers.state)
+router.get('/city/get', orderControllers.city)
+router.get("/state/get", orderControllers.state)
 
 router.post("/", orderControllers.create);
 router.post("/upload", orderControllers.createMultiple);

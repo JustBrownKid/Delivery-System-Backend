@@ -11,7 +11,7 @@ export default {
   async city(req: Request, res: Response): Promise<any> {
     try {
       const city = await OrderServiceInstance.city();
-      sendResponse(res, 200,  "Success" ,city);
+      sendResponse(res, 200, "Success", city);
     } catch (error) {
       sendResponse(res, 500, "Internal Server Error", null, (error as Error).message);
     }
@@ -20,7 +20,7 @@ export default {
   async state(req: Request, res: Response): Promise<any> {
     try {
       const state = await OrderServiceInstance.state();
-      sendResponse(res , 200 , "success" , state);
+      sendResponse(res, 200, "success", state);
     } catch (error) {
       sendResponse(res, 500, "Internal Server Error", null, (error as Error).message);
     }
@@ -67,13 +67,13 @@ export default {
     } catch (error) {
       sendResponse(res, 500, "Internal Server Error", null, (error as Error).message);
     }
-  },async searchOrder(req: Request, res: Response): Promise<any> {
+  }, async searchOrder(req: Request, res: Response): Promise<any> {
     try {
       // Convert comma-separated tracking IDs into an array
       const trackingIdParam = req.query.trackingId?.toString();
       const trackingIds = trackingIdParam
-          ? trackingIdParam.split(',').map(id => id.trim())
-          : [];
+        ? trackingIdParam.split(',').map(id => id.trim())
+        : [];
 
       const params: OrderSearchParams = {
         shipperId: req.query.shipperId?.toString(),
@@ -81,11 +81,11 @@ export default {
         phone: req.query.phone?.toString(),
         trackingIds, // Use array of tracking IDs
         startDate: req.query.startDate
-            ? new Date(req.query.startDate.toString())
-            : undefined,
+          ? new Date(req.query.startDate.toString())
+          : undefined,
         endDate: req.query.endDate
-            ? new Date(req.query.endDate.toString())
-            : undefined,
+          ? new Date(req.query.endDate.toString())
+          : undefined,
       };
 
       const orders = await OrderServiceInstance.searchOrder(params);
@@ -98,7 +98,7 @@ export default {
       });
     }
   }
-,
+  ,
 
   async createMultiple(req: Request, res: Response) {
     const shipperId: number = req.body.shipperId;
